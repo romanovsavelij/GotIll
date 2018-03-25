@@ -1,20 +1,17 @@
-package com.example.sava.gotill;
+package com.example.sava.gotill.engine;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlarmManager;
-import android.app.Application;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.IOException;
+import com.example.sava.gotill.R;
+import com.example.sava.gotill.add_medecine;
 
 public class AlarmClock extends BroadcastReceiver {
     final public static String ONE_TIME="onetime";

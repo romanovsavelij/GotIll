@@ -1,14 +1,14 @@
-package com.example.sava.gotill;
+package com.example.sava.gotill.engine;
 
 public class MyClock {
     public int hours, minutes;
 
-    MyClock(int hours, int minutes) {
+    public MyClock(int hours, int minutes) {
         this.hours = hours;
         this.minutes = minutes;
     }
 
-    int toMillis() {
+    public int toMillis() {
         return 60 * hours + minutes;
     }
 }
