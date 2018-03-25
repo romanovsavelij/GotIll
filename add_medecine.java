@@ -35,13 +35,21 @@ public class add_medecine extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(add_medecine.this, add_medicines_a_day.class);
+                Intent alarms_intent = new Intent(add_medecine.this, add_medicines_a_day.class);
                 Bundle b = new Bundle();
                 EditText tf = findViewById(R.id.cnt1);
-                Integer alarms_count = Integer.valueOf(tf.getText());
+                Integer alarms_count = Integer.valueOf(tf.getText().toString());
                 b.putInt("alarms_count", alarms_count);
-                intent.putExtras(b);
-
+                int first_alarm_hour = 10;
+                int first_alarm_minute = 0;
+                int last_alarm_hour = 11;
+                int last_alarm_minute = 30;
+                b.putInt("first_alarm_hour", first_alarm_hour);
+                b.putInt("first_alarm_minute", first_alarm_minute);
+                b.putInt("last_alarm_hour", last_alarm_hour);
+                b.putInt("last_alarm_minute", last_alarm_minute);
+                alarms_intent.putExtras(b);
+                startActivityForResult(alarms_intent, 1);
 
                 EditText editText = findViewById(R.id.medicine);
                 String medicineName = editText.getText().toString();
