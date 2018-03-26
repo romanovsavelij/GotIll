@@ -1,5 +1,6 @@
 package com.example.sava.gotill;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
@@ -50,6 +51,16 @@ public class add_medicines_a_day extends AppCompatActivity implements SeekBar.On
         }
     }
 
+    void setAlarmClockTimes(Intent intent) {
+        for (int i = 0; i < ll.getChildCount(); ++i) {
+            View view = ll.getChildAt(i);
+            if (view instanceof LinearLayout) {
+                TextView textView = (TextView) ((LinearLayout) view).getChildAt(0);
+                intent.putExtra("time" + i, textView.getText());
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("here", "here");
@@ -69,6 +80,10 @@ public class add_medicines_a_day extends AppCompatActivity implements SeekBar.On
             @Override
             public void onClick(View view) {
                 Toast.makeText(add_medicines_a_day.this, "SEND!!!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                setAlarmClockTimes(intent);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
         Log.d("oc", "created!");
@@ -80,17 +95,11 @@ public class add_medicines_a_day extends AppCompatActivity implements SeekBar.On
             return;
         }
         String tag = (String) seekBar.getTag();
-        Integer count = ll.getChildCount();
-        Log.d("seek_bar", count.toString());
         for (int i = 0; i < ll.getChildCount(); ++i) {
             View view = ll.getChildAt(i);
-            //Log.d("tag", view.getTag().toString());
             if (view instanceof LinearLayout) {
                 TextView textView = (TextView) ((LinearLayout) view).getChildAt(0);
-                //Log.d("seek_bar", "instanceof");
-                //Log.d("seek_bar", String.valueOf(textView.getTag()));
                 if (tag == textView.getTag()) {
-                    Log.d("seek_bar", "tag");
                     textView.setText(new MyClock(progress).getTime());
                 }
             }

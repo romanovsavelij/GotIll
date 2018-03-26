@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,12 @@ public class ScrollingActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {
             return;
+        }
+        Log.d("count", data.getStringExtra("alarms_count"));
+        Integer alarms_count = Integer.valueOf(data.getStringExtra("alarms_count"));
+        for (int i = 0; i < alarms_count; ++i) {
+            String name = "time" + i, time = data.getStringExtra(name);
+            Log.d("result", time);
         }
         String inf = data.getStringExtra("period");
         alarmClock.setAlarm(this.getApplicationContext());
