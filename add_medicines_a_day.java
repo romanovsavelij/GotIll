@@ -2,6 +2,7 @@ package com.example.sava.gotill;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -13,34 +14,38 @@ import android.widget.Toast;
 
 import com.example.sava.gotill.engine.MyClock;
 
+import java.time.Clock;
 
-public class add_medicines_a_day extends AppCompatActivity {
+
+public class add_medicines_a_day extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     MyClock first_alarm, last_alarm;
+    LinearLayout ll;
 
-    void add_alarm_clock(int time, Integer ind, LinearLayout ll) {
+    void add_alarm_clock(int time, Integer ind) {
         View alarmView = getLayoutInflater().inflate(R.layout.alarm_view, null);
-        ll.addView(alarmView);
         TextView textView = alarmView.findViewById(R.id.time);
-        textView.setTag("textView" + ind.toString());
-        textView.setText("lol");
+        textView.setTag(ind.toString());
+        textView.setText(new MyClock(time).getTime());
         SeekBar seekBar = alarmView.findViewById(R.id.seek_bar);
-        seekBar.setMax(1440);
+        seekBar.setOnSeekBarChangeListener(this);
+        seekBar.setMax(1439);
         seekBar.setProgress(time);
-        seekBar.setTag("seekBar" + ind.toString());
+        seekBar.setTag(ind.toString());
+        ll.addView(alarmView);
     }
 
     void add_seek_bars(Integer alarms_count) {
-        LinearLayout ll = findViewById(R.id.alarms);
+        ll = findViewById(R.id.alarms);
         int start_time = first_alarm.toMillis(), end_time = last_alarm.toMillis();
         if (alarms_count == 1) {
-            add_alarm_clock(end_time, 0, ll);
+            add_alarm_clock(end_time, 0);
         }
         else {
             int period = (end_time - start_time) / (alarms_count - 1);
             for (Integer i = 0; i < alarms_count; ++i) {
                 int time = start_time + i * period;
-                add_alarm_clock(time, 0, ll);
+                add_alarm_clock(time, i);
             }
         }
     }
@@ -66,6 +71,39 @@ public class add_medicines_a_day extends AppCompatActivity {
                 Toast.makeText(add_medicines_a_day.this, "SEND!!!", Toast.LENGTH_SHORT).show();
             }
         });
+        Log.d("oc", "created!");
     }
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (!fromUser) {
+            return;
+        }
+        String tag = (String) seekBar.getTag();
+        Integer count = ll.getChildCount();
+        Log.d("seek_bar", count.toString());
+        for (int i = 0; i < ll.getChildCount(); ++i) {
+            View view = ll.getChildAt(i);
+            //Log.d("tag", view.getTag().toString());
+            if (view instanceof LinearLayout) {
+                TextView textView = (TextView) ((LinearLayout) view).getChildAt(0);
+                //Log.d("seek_bar", "instanceof");
+                //Log.d("seek_bar", String.valueOf(textView.getTag()));
+                if (tag == textView.getTag()) {
+                    Log.d("seek_bar", "tag");
+                    textView.setText(new MyClock(progress).getTime());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
 }
