@@ -55,7 +55,7 @@ public class add_medecine extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Spinner spinner = findViewById(R.id.period);
-        String[] data = {"день", "неделя", "месяц"};
+        String[] data = {"деней", "недель", "месяцев"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data);
         spinner.setAdapter(adapter);
 

@@ -17,13 +17,17 @@ import android.view.MenuItem;
 
 import com.example.sava.gotill.engine.AlarmClock;
 import com.example.sava.gotill.engine.Data;
+import com.example.sava.gotill.engine.MyClock;
 import com.example.sava.gotill.engine.MyCustomAdapter;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class ScrollingActivity extends AppCompatActivity {
-    AlarmClock alarmClock = new AlarmClock();
+    AlarmClock alarmClock;
     RecyclerView recyclerView;
     MyCustomAdapter adapter;
-
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,8 @@ public class ScrollingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scrolling);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        context = getApplicationContext();
+        alarmClock = new AlarmClock(context);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -44,7 +50,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
 
         recyclerView = findViewById(R.id.recycleView);
-        adapter = new MyCustomAdapter(this, Data.getData(this.getApplicationContext()));
+        adapter = new MyCustomAdapter(this, Data.getData(context));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -56,13 +62,19 @@ public class ScrollingActivity extends AppCompatActivity {
         }
         Log.d("count", data.getStringExtra("alarms_count"));
         Integer alarms_count = Integer.valueOf(data.getStringExtra("alarms_count"));
+        GregorianCalendar curDate = (GregorianCalendar) new GregorianCalendar().getInstance();
+
         for (int i = 0; i < alarms_count; ++i) {
             String name = "time" + i, time = data.getStringExtra(name);
+            GregorianCalendar date = curDate;
+            date.set(GregorianCalendar.HOUR_OF_DAY, new MyClock(time).hours);
+            date.set(GregorianCalendar.MINUTE, new MyClock(time).minutes);
+            alarmClock.setAlarm(date);
             save("time" + i, time);
             Log.d("result", time);
         }
         String inf = data.getStringExtra("period");
-        alarmClock.setAlarm(this.getApplicationContext());
+        //alarmClock.setAlarm(time);
     }
 
     private void save(String s, String time) {

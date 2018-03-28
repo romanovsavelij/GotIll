@@ -13,8 +13,20 @@ import android.widget.Toast;
 import com.example.sava.gotill.R;
 import com.example.sava.gotill.add_medecine;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class AlarmClock extends BroadcastReceiver {
     final public static String ONE_TIME="onetime";
+    AlarmManager am;
+    Context context;
+
+    public AlarmClock() {};
+
+    public AlarmClock(Context context) {
+        this.context = context;
+        am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -27,12 +39,16 @@ public class AlarmClock extends BroadcastReceiver {
         context.startActivity(intent1);
     }
 
-    public void setAlarm(Context context) {
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    public void cancelAlarm(PendingIntent pendingIntent) {
+        am.cancel(pendingIntent);
+    }
+
+
+    public void setAlarm(GregorianCalendar time) {
         Intent intent = new Intent(context, AlarmClock.class);
         intent.putExtra(ONE_TIME, Boolean.TRUE);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-        long triggerTime = System.currentTimeMillis() + 5000;
+        long triggerTime = time.getTimeInMillis();
         if (Build.VERSION.SDK_INT >= 23) {
             am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi);
         } else if (Build.VERSION.SDK_INT >= 19) {
